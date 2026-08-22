@@ -8,8 +8,8 @@ import (
 	"runtime"
 )
 
-func ResolveFilePath(relativePath string) (string, bool) {
-	root := resolveProjectRoot()
+func ResolvePath(relativePath string) (string, bool) {
+	root := ResolveProjectRoot()
 
 	if root == "" {
 		return "", false
@@ -42,7 +42,7 @@ func ResolveFilePath(relativePath string) (string, bool) {
 	return path, false
 }
 
-func resolveProjectRoot() string {
+func ResolveProjectRoot() string {
 	_, filename, _, ok := runtime.Caller(0)
 	if !ok {
 		slog.Error("failed to determine project root: runtime.Caller failed")
