@@ -22,9 +22,12 @@ type migrationFile struct {
 }
 
 func getMigrationFiles(root string, failOnModified bool, histories []migrationHistory) ([]migrationFile, error) {
+	var files []migrationFile
+
 	path, exists := utils.ResolvePath(root)
 	if !exists {
-		return nil, fmt.Errorf("root folder mentioned does not exist")
+		// maybe some folders are not added yet because not needed
+		return files, nil
 	}
 
 	projectRoot := utils.ResolveProjectRoot()
@@ -33,8 +36,6 @@ func getMigrationFiles(root string, failOnModified bool, histories []migrationHi
 	for _, migration := range histories {
 		applied[migration.FilePath] = migration
 	}
-
-	var files []migrationFile
 
 	err := filepath.WalkDir(path, func(currentPath string, entry fs.DirEntry, err error) error {
 		if err != nil {
