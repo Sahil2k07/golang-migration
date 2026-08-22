@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/Sahil2k07/golang-migration/internal/database"
+	"gorm.io/gorm"
 )
 
 type migrationHistory struct {
@@ -30,6 +31,14 @@ func getMigrationHistory() ([]migrationHistory, error) {
 	}
 
 	return histories, nil
+}
+
+func saveMigrationHistory(tx *gorm.DB, histories []migrationHistory) error {
+	if err := tx.Table("migration.migration_history").Create(&histories).Error; err != nil {
+		return fmt.Errorf("failed to save migration history: %w", err)
+	}
+
+	return nil
 }
 
 func ensureMigrationHistoryExists() error {

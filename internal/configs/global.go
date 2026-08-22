@@ -27,7 +27,7 @@ func LoadConfigs() GlobalConfig {
 			Database: loadDatabaseConfig(),
 		}
 
-		path, exists := utils.ResolveFilePath("configs/app.toml")
+		path, exists := utils.ResolvePath("configs/app.toml")
 		if globalConfig.App.Environment == "" && exists {
 			_, err := toml.DecodeFile(path, &globalConfig)
 			if err != nil {
