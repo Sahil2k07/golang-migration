@@ -16,4 +16,6 @@ func init() {
 
 func main() {
 	slog.Info(appConfigs.Database.Host) // testing
+
+	slog.Info("checking env", "isdevelopment", configs.IsDevelopment)
 }

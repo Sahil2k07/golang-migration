@@ -2,6 +2,8 @@ package configs
 
 import (
 	"log/slog"
+	"os"
+	"strings"
 	"sync"
 
 	"github.com/BurntSushi/toml"
@@ -15,6 +17,7 @@ var (
 )
 
 type GlobalConfig struct {
+	App      appConfig      `toml:"app"`
 	Database databaseConfig `toml:"database"`
 }
 
@@ -23,6 +26,7 @@ func LoadConfigs() GlobalConfig {
 		path, exists := utils.ResolveFilePath("configs/app.toml")
 		if !exists {
 			globalConfig = GlobalConfig{
+				App:      loadAppConfig(),
 				Database: loadDatabaseConfig(),
 			}
 		} else {
@@ -31,9 +35,14 @@ func LoadConfigs() GlobalConfig {
 				slog.Error("failed to decode app.toml", "error", err)
 				panic("Failed to load development configurations")
 			}
-
-			IsDevelopment = true
 		}
+
+		if env := os.Getenv("APP_ENV"); env != "" {
+			globalConfig.App.Environment = env
+		}
+
+		IsDevelopment = strings.ToLower(globalConfig.App.Environment) == "development"
+		configureLogging()
 	})
 
 	return globalConfig

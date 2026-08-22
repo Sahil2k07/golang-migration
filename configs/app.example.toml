@@ -1,3 +1,7 @@
+[app]
+environment = "development"
+json_logs = false
+
 [database]
 db_host = "localhost"
 db_port = "5432"
