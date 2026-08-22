@@ -1,6 +1,7 @@
 package configs
 
 import (
+	"log/slog"
 	"sync"
 
 	"github.com/BurntSushi/toml"
@@ -27,7 +28,8 @@ func LoadConfigs() GlobalConfig {
 		} else {
 			_, err := toml.DecodeFile(path, &globalConfig)
 			if err != nil {
-				panic("failed to decode config file: " + err.Error())
+				slog.Error("failed to decode app.toml", "error", err)
+				panic("Failed to load development configurations")
 			}
 
 			IsDevelopment = true
