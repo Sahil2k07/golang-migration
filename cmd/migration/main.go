@@ -5,17 +5,20 @@ import (
 
 	"github.com/Sahil2k07/golang-migration/internal/configs"
 	"github.com/Sahil2k07/golang-migration/internal/database"
+	"github.com/Sahil2k07/golang-migration/internal/migrations"
 )
 
-var appConfigs configs.GlobalConfig
-
 func init() {
-	appConfigs = configs.LoadConfigs()
+	configs.LoadConfigs()
 	database.ConnectPostgres()
 }
 
 func main() {
-	slog.Info(appConfigs.Database.Host) // testing
+	err := migrations.RunMigrations()
+	if err != nil {
+		slog.Error("Migrations failed", "error", err)
+		return
+	}
 
-	slog.Info("checking env", "isdevelopment", configs.IsDevelopment)
+	slog.Info("Migrations Applied Successfully")
 }
