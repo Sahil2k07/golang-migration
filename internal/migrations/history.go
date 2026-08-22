@@ -2,11 +2,19 @@ package migrations
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/Sahil2k07/golang-migration/internal/database"
 )
 
 type migrationHistory struct {
+	ID        int
+	FileName  string
+	FilePath  string
+	FileHash  string
+	FileType  string
+	CreatedAt time.Time
+	UpdatedAt time.Time
 }
 
 func getMigrationHistory() ([]migrationHistory, error) {
@@ -29,7 +37,7 @@ func ensureMigrationHistoryExists() error {
 		CREATE SCHEMA IF NOT EXISTS migration;
 
 		CREATE TABLE IF NOT EXISTS migration.migration_history (
-			id         INT PRIMARY KEY,
+			id         BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 			file_name  VARCHAR(100) NOT NULL,
 			file_path  VARCHAR(200) UNIQUE NOT NULL,
 			file_hash  VARCHAR(100) NOT NULL,
