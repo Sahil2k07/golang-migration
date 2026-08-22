@@ -12,7 +12,7 @@ type appConfig struct {
 
 func loadAppConfig() appConfig {
 	return appConfig{
-		Environment: "PRODUCTION",
+		Environment: os.Getenv("APP_ENV"),
 		JSONLogs:    true,
 	}
 }
