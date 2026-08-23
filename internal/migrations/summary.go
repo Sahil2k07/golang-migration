@@ -10,7 +10,7 @@ func printMigrationSummary(start time.Time, table, index, view, function, proced
 
 	slog.Info(
 		"Migration summary",
-		"duration", duration,
+		"duration", duration.String(),
 		"tables", table,
 		"indexes", index,
 		"views", view,

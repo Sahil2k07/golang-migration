@@ -23,7 +23,7 @@ func loadDatabaseConfig(config databaseConfig) databaseConfig {
 	}
 }
 
-func getDbConfig() databaseConfig {
+func GetDbConfig() databaseConfig {
 	return databaseConfig{
 		Host:     globalConfig.Database.Host,
 		Port:     globalConfig.Database.Port,
@@ -34,7 +34,7 @@ func getDbConfig() databaseConfig {
 }
 
 func GetDbString() string {
-	conf := getDbConfig()
+	conf := GetDbConfig()
 
 	return fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s", conf.Host, conf.User, conf.Password, conf.Name, conf.Port)
 }

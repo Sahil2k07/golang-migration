@@ -1,7 +1,6 @@
 package configs
 
 import (
-	"log/slog"
 	"os"
 	"strconv"
 )
@@ -9,6 +8,13 @@ import (
 type appConfig struct {
 	Environment string `toml:"environment"`
 	JSONLogs    bool   `toml:"json_logs"`
+}
+
+func GetAppConfig() appConfig {
+	return appConfig{
+		Environment: globalConfig.App.Environment,
+		JSONLogs:    globalConfig.App.JSONLogs,
+	}
 }
 
 func loadAppConfig(config appConfig) appConfig {
@@ -30,17 +36,6 @@ func loadAppConfig(config appConfig) appConfig {
 
 			return parsed
 		}(),
-	}
-}
-
-func configureLogging() {
-	if globalConfig.App.JSONLogs {
-		options := &slog.HandlerOptions{
-			Level: slog.LevelInfo,
-		}
-
-		handler := slog.NewJSONHandler(os.Stdout, options)
-		slog.SetDefault(slog.New(handler))
 	}
 }
 
