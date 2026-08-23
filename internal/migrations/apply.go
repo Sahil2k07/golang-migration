@@ -6,15 +6,14 @@ import (
 	"time"
 
 	"gorm.io/gorm"
-	"gorm.io/gorm/clause"
 )
 
 func applyMigration(tx *gorm.DB, schemaType string, migrationFiles []migrationFile) error {
 	var histories []migrationHistory
 
 	for _, file := range migrationFiles {
-		if err := tx.Exec(file.SQL); err != nil {
-			return fmt.Errorf("Migration failed: %v", file.FileName)
+		if err := tx.Exec(file.SQL).Error; err != nil {
+			return fmt.Errorf("Migration failed %v: %w", file.FileName, err)
 		}
 
 		history := migrationHistory{
@@ -30,20 +29,5 @@ func applyMigration(tx *gorm.DB, schemaType string, migrationFiles []migrationFi
 		slog.Info("Migration Applied", "file", file.FileName)
 	}
 
-	if len(histories) > 0 {
-		if err := tx.Table("migration.migration_history").
-			Clauses(clause.OnConflict{
-				Columns: []clause.Column{{Name: "file_path"}},
-				DoUpdates: clause.AssignmentColumns([]string{
-					"updated_at",
-					"file_type",
-					"file_hash",
-				}),
-			}).
-			Create(&histories).Error; err != nil {
-			return fmt.Errorf("Failed to save migration histories for %v: %v", schemaType, err)
-		}
-	}
-
-	return nil
+	return saveMigrationHistory(tx, schemaType, histories)
 }

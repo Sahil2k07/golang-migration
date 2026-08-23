@@ -6,6 +6,7 @@ import (
 
 	"github.com/Sahil2k07/golang-migration/internal/database"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 type migrationHistory struct {
@@ -27,15 +28,26 @@ func getMigrationHistory() ([]migrationHistory, error) {
 
 	err := database.DB.Table("migration.migration_history").Find(&histories).Error
 	if err != nil {
-		return nil, fmt.Errorf("Migration History error: %v", err)
+		return nil, fmt.Errorf("Migration History error: %w", err)
 	}
 
 	return histories, nil
 }
 
-func saveMigrationHistory(tx *gorm.DB, histories []migrationHistory) error {
-	if err := tx.Table("migration.migration_history").Create(&histories).Error; err != nil {
-		return fmt.Errorf("failed to save migration history: %w", err)
+func saveMigrationHistory(tx *gorm.DB, schemaType string, histories []migrationHistory) error {
+	if len(histories) > 0 {
+		if err := tx.Table("migration.migration_history").
+			Clauses(clause.OnConflict{
+				Columns: []clause.Column{{Name: "file_path"}},
+				DoUpdates: clause.AssignmentColumns([]string{
+					"updated_at",
+					"file_type",
+					"file_hash",
+				}),
+			}).
+			Create(&histories).Error; err != nil {
+			return fmt.Errorf("Failed to save migration histories for %v: %w", schemaType, err)
+		}
 	}
 
 	return nil
@@ -57,7 +69,7 @@ func ensureMigrationHistoryExists() error {
 	`
 
 	if err := database.DB.Exec(sql).Error; err != nil {
-		return fmt.Errorf("History table error: %v", err)
+		return fmt.Errorf("History table error: %w", err)
 	}
 
 	return nil
