@@ -68,7 +68,7 @@ func getMigrationFiles(root string, failOnModified bool, histories []migrationHi
 		if migration, exists := applied[relativePath]; exists {
 			// The file hasn't changed since applied
 			if migration.FileHash == filehash {
-				slog.Warn("Migration File Skipped", "file", entry.Name())
+				slog.Warn("Migration Skipped", "file", entry.Name())
 				return nil
 			}
 
