@@ -27,6 +27,7 @@ func getMigrationFiles(root string, failOnModified bool, histories []migrationHi
 	path, exists := utils.ResolvePath(root)
 	if !exists {
 		// maybe some folders are not added yet because not needed
+		slog.Warn("Root mentioned not found", "root", root)
 		return files, nil
 	}
 
