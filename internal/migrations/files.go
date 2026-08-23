@@ -89,7 +89,7 @@ func getMigrationFiles(root string, failOnModified bool, histories []migrationHi
 	})
 
 	if err != nil {
-		return nil, fmt.Errorf("failed to read migration files: %w", err)
+		return nil, err
 	}
 
 	sort.Slice(files, func(i, j int) bool {
