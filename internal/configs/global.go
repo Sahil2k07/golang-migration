@@ -22,11 +22,6 @@ type GlobalConfig struct {
 
 func LoadConfigs() GlobalConfig {
 	once.Do(func() {
-		globalConfig = GlobalConfig{
-			App:      loadAppConfig(),
-			Database: loadDatabaseConfig(),
-		}
-
 		path, exists := utils.ResolvePath("configs/app.toml")
 		if globalConfig.App.Environment == "" && exists {
 			_, err := toml.DecodeFile(path, &globalConfig)
@@ -34,6 +29,11 @@ func LoadConfigs() GlobalConfig {
 				slog.Error("failed to decode app.toml", "error", err)
 				panic("Failed to load development configurations")
 			}
+		}
+
+		globalConfig = GlobalConfig{
+			App:      loadAppConfig(globalConfig.App),
+			Database: loadDatabaseConfig(globalConfig.Database),
 		}
 
 		IsDevelopment = strings.EqualFold(

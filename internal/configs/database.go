@@ -13,13 +13,13 @@ type databaseConfig struct {
 	Name     string `toml:"db_name"`
 }
 
-func loadDatabaseConfig() databaseConfig {
+func loadDatabaseConfig(config databaseConfig) databaseConfig {
 	return databaseConfig{
-		Host:     os.Getenv("DB_HOST"),
-		Port:     os.Getenv("DB_PORT"),
-		User:     os.Getenv("DB_USER"),
-		Password: os.Getenv("DB_PASSWORD"),
-		Name:     os.Getenv("DB_NAME"),
+		Host:     envOrDefault(os.Getenv("DB_HOST"), config.Host),
+		Port:     envOrDefault(os.Getenv("DB_PORT"), config.Port),
+		User:     envOrDefault(os.Getenv("DB_USER"), config.User),
+		Password: envOrDefault(os.Getenv("DB_PASSWORD"), config.Password),
+		Name:     envOrDefault(os.Getenv("DB_NAME"), config.Name),
 	}
 }
 
