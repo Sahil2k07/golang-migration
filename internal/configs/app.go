@@ -2,18 +2,21 @@ package configs
 
 import (
 	"os"
-	"strconv"
+
+	"github.com/Sahil2k07/golang-migration/internal/utils"
 )
 
 type appConfig struct {
 	Environment string `toml:"environment"`
 	JSONLogs    bool   `toml:"json_logs"`
+	FileLogging bool   `toml:"file_logging"`
 }
 
 func GetAppConfig() appConfig {
 	return appConfig{
 		Environment: globalConfig.App.Environment,
 		JSONLogs:    globalConfig.App.JSONLogs,
+		FileLogging: globalConfig.App.FileLogging,
 	}
 }
 
@@ -23,19 +26,8 @@ func loadAppConfig(config appConfig) appConfig {
 			os.Getenv("APP_ENV"),
 			config.Environment,
 		),
-		JSONLogs: func() bool {
-			value := os.Getenv("JSON_LOGS")
-			if value == "" {
-				return config.JSONLogs
-			}
-
-			parsed, err := strconv.ParseBool(value)
-			if err != nil {
-				return config.JSONLogs
-			}
-
-			return parsed
-		}(),
+		JSONLogs:    utils.StringToBool(os.Getenv("JSON_LOGS"), globalConfig.App.JSONLogs),
+		FileLogging: utils.StringToBool(os.Getenv("FILE_LOGGING"), globalConfig.App.FileLogging),
 	}
 }
 

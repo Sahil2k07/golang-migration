@@ -1,6 +1,7 @@
 [app]
 environment = "development"
 json_logs = false
+file_logging = false
 
 [database]
 db_host = "localhost"
