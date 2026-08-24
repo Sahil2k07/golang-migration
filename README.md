@@ -85,6 +85,7 @@ cp configs/app.example.toml configs/app.toml
 [app]
 environment = "development"
 json_logs = false
+file_logging = false
 
 [database]
 db_host = "localhost"
@@ -93,6 +94,11 @@ db_user = "postgres"
 db_password = "shahil"
 db_name = "migration"
 ```
+
+#### Logging options:
+
+- Set `json_logs = true` to enable JSON-formatted logging.
+- Set `file_logging = true` to write logs to a file in addition to the terminal.
 
 ### 3. Download dependencies
 
