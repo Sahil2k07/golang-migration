@@ -2,3 +2,8 @@ vendor
 
 configs/*
 !configs/*.example.toml
+
+bin
+logs
+*.log
+*.exe
