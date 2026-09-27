@@ -1,0 +1,5 @@
+*.sql linguist-detectable=true
+*.sql linguist-language=PLpgSQL
+
+Dockerfile* linguist-detectable=true
+Dockerfile* linguist-language=Dockerfile
